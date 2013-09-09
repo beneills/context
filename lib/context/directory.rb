@@ -9,6 +9,7 @@ module Context
 
       Dir.mkdir(root_directory) if !File.exists?(root_directory)
       Dir.mkdir(contexts_path) if !File.exists?(contexts_path)
+      Dir.mkdir(pids_path) if !File.exists?(pids_path)
 
       @contexts = Dir.entries(contexts_path).select {|f| !File.directory? f}.map do |c|
         Context.new(File.join(contexts_path, c))
@@ -46,6 +47,10 @@ module Context
       File.join(contexts_path, context.name, action)
     end
 
+    def pids_path
+      File.join(@root_directory, 'pids')
+    end
+
     def contexts_path
       File.join(@root_directory, 'contexts')
     end
@@ -64,22 +69,36 @@ module Context
     end
 
     def enter(context)
-      puts "Enter: #{context}"
       action_paths(context, 'enter').each do |s|
         run(s)
       end
     end
 
     def exit(context)
-      puts "Exit: #{context}"
+      # make sure all enter processes are done
+      Dir["#{pids_path}/*"].each do |pid_file|
+        pid = File.basename(pid_file).to_i
+
+        #system "kill #{pid}"
+        Process.kill("INT", pid.to_i)
+      end
+      # then run exit scripts
       action_paths(context, 'exit').each do |s|
-        run(s)
+        run(s, auto_kill=false)
       end
     end
     
-    def run(script)
+    def run(script, auto_kill=true)
       puts "Run: #{script}"
-      system("sh #{script}")
+
+      wrapper = File.join(File.dirname(File.dirname(__FILE__)), 'context_script_wrapper.rb')
+      runner = auto_kill ? wrapper : ENV['SHELL']
+
+      pid = Process.spawn({},
+                          runner, script,
+                          :out => '/dev/null', :err => '/dev/null')
+      # we can now forget about this
+      Process.detach pid
     end
 
     def action_paths(context, action)

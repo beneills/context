@@ -38,6 +38,7 @@ module Context
       raise "Context: <#{name}> does not exist!" if c.nil?
       raise "Already in context: <#{name}>!" if c == current
 
+      puts "<#{current}> => <#{c}>"
       exit(current)
       enter(c)
       @directory.update_current(c)
