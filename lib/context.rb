@@ -35,10 +35,10 @@ module Context
 
     def switch(name)
       c = context(name)
-      raise "Context: <#{name}> does not exist!" if c.nil?
-      raise "Already in context: <#{name}>!" if c == current
+      raise "Context: [#{name}] does not exist!" if c.nil?
+      raise "Already in context: [#{name}]!" if c == current
 
-      puts "<#{current}> => <#{c}>"
+      puts "[#{current}] ->  [#{c}]"
       exit(current)
       enter(c)
       @directory.update_current(c)

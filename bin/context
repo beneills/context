@@ -9,7 +9,7 @@ require lib
 
 
 opts = Trollop::options do
-  banner "Commands: (l)ist, (c)urrent, create, (s)witch"
+  banner "Commands: (l)ist, (c)urrent, create, (s)witch, (e)xit"
   opt :root, "Root context location.", :default => File.join(Dir.home, '.context')
 end
 
@@ -19,9 +19,9 @@ c = Context::Contexts.new(opts.root)
 
 case
 when ['list', 'l'].include?(cmd)
-  puts c.contexts
+  puts c.contexts.map { |c| "[#{c.name}]" }
 when ['current', 'c'].include?(cmd) || cmd.nil?
-  puts c.current
+  puts "[#{c.current}]"
 when ['create', 'new'].include?(cmd)
   puts "Creating new context from <default> skeleton"
   name = ARGV.shift
@@ -33,6 +33,8 @@ when ['create', 'new'].include?(cmd)
 when ['switch', 's'].include?(cmd)
   name = ARGV.shift
   c.switch(name)
+when ['exit', 'e', 'x'].include?(cmd)
+  c.switch('default') unless c.current.name == 'default'
 else
   name = cmd
   c.switch(name)

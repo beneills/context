@@ -1,24 +1,21 @@
 # Context
 
-TODO: Write a gem description
+Create desktop /contexts/ with custom entry/exit actions
 
 ## Installation
-
-Add this line to your application's Gemfile:
-
-    gem 'context'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
 
     $ gem install context
 
 ## Usage
 
-TODO: Write usage instructions here
+    $ context new test
+    $ cd ~/.context/contexts/vpn/
+    $ emacs enter.sh exit.sh
+    $ context list
+    $ context vpn
+    $ context -h
+
+Also, check out examples in examples/ directory.
 
 ## Contributing
 

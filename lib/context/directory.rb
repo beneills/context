@@ -37,7 +37,7 @@ module Context
     end
 
     def create(name)
-      raise "Context: <#{name}> already exists!" if @contexts.find { |c| c.name == name }
+      raise "Context: [#{name}] already exists!" if @contexts.find { |c| c.name == name }
       c = Context.new(File.join(contexts_path, name))
       FileUtils.cp_r(default.path, c.path)
       @contexts << c
@@ -80,7 +80,7 @@ module Context
         pid = File.basename(pid_file).to_i
 
         #system "kill #{pid}"
-        Process.kill("INT", pid.to_i)
+        Process.kill("TERM", pid.to_i)
       end
       # then run exit scripts
       action_paths(context, 'exit').each do |s|
@@ -89,8 +89,6 @@ module Context
     end
     
     def run(script, auto_kill=true)
-      puts "Run: #{script}"
-
       wrapper = File.join(File.dirname(File.dirname(__FILE__)), 'context_script_wrapper.rb')
       runner = auto_kill ? wrapper : ENV['SHELL']
 
