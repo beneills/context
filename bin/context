@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+
+require 'trollop'
+
+# require daemon relative library
+file = File.symlink?(__FILE__) ? File.readlink(__FILE__) : __FILE__
+lib = File.join File.dirname(file), '/../lib/context'
+require lib
+
+
+opts = Trollop::options do
+  banner "Commands: (l)ist, (c)urrent, create, (s)witch"
+  opt :root, "Root context location.", :default => File.join(Dir.home, '.context')
+end
+
+cmd = ARGV.shift
+
+c = Context::Contexts.new(opts.root)
+
+case
+when ['list', 'l'].include?(cmd)
+  puts c.contexts
+when ['current', 'c'].include?(cmd) || cmd.nil?
+  puts c.current
+when ['create', 'new'].include?(cmd)
+  puts "Creating new context from <default> skeleton"
+  name = ARGV.shift
+  if name.nil?
+    puts "Please supply a context name!"
+  else
+    c.create(name)
+  end
+when ['switch', 's'].include?(cmd)
+  name = ARGV.shift
+  c.switch(name)
+else
+  name = cmd
+  c.switch(name)
+end
