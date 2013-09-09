@@ -1,0 +1,3 @@
+* Switch between "desktop contexts"
+* Start in "default" context
+* entry/exit scripts for each context
