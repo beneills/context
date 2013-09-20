@@ -4,13 +4,13 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'context/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "context"
+  spec.name          = "desktop-context"
   spec.version       = Context::VERSION
   spec.authors       = ["Ben Eills"]
   spec.email         = ["ben@beneills.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
-  spec.homepage      = ""
+  spec.description   = "Create desktop /contexts/ with custom entry/exit actions"
+  spec.summary       = "Create desktop /contexts/ with custom entry/exit actions"
+  spec.homepage      = "http://www.beneills.com/"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
